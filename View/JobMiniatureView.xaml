@@ -1,0 +1,58 @@
+﻿<UserControl x:Class="Fabrication.UserControls.View.JobMiniatureView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:Fabrication.UserControls.View"
+             xmlns:CoreCS="http://www.prodways.com/CoreCS"
+             mc:Ignorable="d"
+             xmlns:ViewModel="clr-namespace:Fabrication.UserControls.ViewModel">
+    <UserControl.DataContext>
+        <ViewModel:JobMiniatureViewModel/>
+    </UserControl.DataContext>
+    <UserControl.Resources>
+        <CoreCS:InverseVisibilityConverter x:Key="invertVisibilityConverter"/>
+    </UserControl.Resources>
+    <Grid Name="MiniatureGrid" Width="194" Background="#60FFFFFF" Margin="5">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        <!-- Title -->
+        <TextBlock FontFamily="Calibri Light" Grid.Row="0" FontSize="20"  TextWrapping="Wrap" Text="{Binding TitlePreview}" Margin="5,0"/>
+        <!-- StackPanel of the 3D view and the Parts List-->
+        <StackPanel Grid.Row="1" Height="150" VerticalAlignment="Bottom">
+            <ListView  ItemsSource="{Binding PartsListPreview }" Visibility="{Binding PartsListVisibility}" Background="Transparent" BorderThickness="0">
+                <ListView.ItemContainerStyle>
+                    <Style TargetType="{x:Type ListViewItem}">
+                        <Setter Property="Focusable" Value="false"/>
+                    </Style>
+                </ListView.ItemContainerStyle>
+            </ListView>
+            <Border Visibility="{Binding PartsListVisibility, Converter={StaticResource invertVisibilityConverter}}" Height="150" Width="194">
+                <Border.Background>
+                    <ImageBrush ImageSource="{Binding ScreenShotPreview}" Stretch="UniformToFill" AlignmentY="Center"/>
+                </Border.Background>
+            </Border>
+        </StackPanel>
+        <!-- Progress Bar -->
+        <ProgressBar Grid.Row="2" Value="{Binding PercentProgressBar, Mode=OneWay}" Background="{Binding ColorBackgroundProgressBar}" Foreground="{Binding ColorProgressBar}"/>
+        <!-- StackPanel of State and Layers -->
+        <Grid Grid.Row="2">
+            <StackPanel  Orientation="Vertical">
+                <TextBlock Text="{Binding StatePreview}"/>
+                <TextBlock Text="{Binding LayersPreview}"/>
+            </StackPanel>
+        </Grid>
+        <!-- DockPanel of MetaData -->
+        <DockPanel Grid.Row="3">
+            <TextBlock DockPanel.Dock="Left" HorizontalAlignment="Left" Text="{Binding MetaDataLeft}"/>
+            <TextBlock DockPanel.Dock="Right" HorizontalAlignment="Right" Text="{Binding MetaDataRight}"/>
+        </DockPanel>
+        <!-- View log file button -->
+        <Button  Grid.Row="4" Content="View log file" Foreground="Blue" Command="{Binding DisplayLog}" Style="{CoreCS:MyStyleRef ResourceKey=BaseButtonStyle}"/>
+    </Grid>
+</UserControl>
